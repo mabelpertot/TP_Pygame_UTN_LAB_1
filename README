@@ -1,0 +1,54 @@
+# Space Attack
+
+Este juego 2D de disparos implementa la función para que el jugador controle el personaje que dispara 
+proyectiles para enfrentarse a enemigos. El objetivo del juego es derrotar a los jefes enemigos y obtener 
+la puntuación más alta posible.
+El jugador tiene una barra de vida que se reduce cuando entra en contacto con los proyectiles enemigos o los 
+jefes de los enemigos.
+Además, el jugador tiene un contador de municiones que indica la cantidad de proyectiles restantes. Existe
+una mecánica de recolección de "double refill" que se activa al derrotar a algunos jefes.
+El juego también muestra la puntuación actual y la puntuación más alta en la pantalla, esto determina un
+sistema de puntuación y un intento de superar la puntuación más alta anterior.
+En general, el juego consiste en centrarse en la acción y el combate contra jefes enemigos, con el objetivo 
+de sobrevivir el mayor tiempo posible y obtener la puntuación más alta.
+
+![Captura de pantalla del juego](Captura.JPG)
+
+## Cómo jugar
+
+1. Ejecuta el juego: `python main.py`
+2. Sigue las instrucciones en pantalla para jugar.
+3. Usa las teclas Izquierda,Derecha,Espacio para realizar acciones específicas.
+4. Evita los obstáculos y subi para sumar puntos y mejorar el HIGHSCORE.
+
+## Características principales
+
+Los bloques de código son parte de un juego en Pygame y se encargan de diferentes aspectos del juego.:
+
+1. Bloque de configuración inicial: Este bloque define las configuraciones iniciales del juego, como el tamaño de la pantalla, la música de fondo, las imágenes y las variables.
+
+2. Bloque de inicialización de Pygame: Este bloque inicializa el motor de juego Pygame y crea la ventana de juego.
+
+3. Bucle principal del juego: Este bloque contiene el bucle principal del juego, donde se gestionan las interacciones y se actualiza la pantalla. Incluye el manejo de eventos, actualización de personajes, detección de colisiones, gestión de puntuaciones y dibujo en pantalla.
+
+4. Bloque de manejo de eventos: Este bloque maneja los eventos del juego, como las teclas presionadas, el cierre de la ventana, etc.
+
+5. Bloque de actualización de personajes: Este bloque actualiza la posición y otros atributos de los personajes del juego, como el jugador y los jefes. También maneja la lógica de movimiento de los personajes.
+
+6. Bloque de detección de colisiones: Este bloque detecta las colisiones entre los diferentes sprites del juego, como los proyectiles del jugador y los jefes, y realiza acciones en consecuencia, como la reducción de la salud de los jefes o del jugador.
+
+7. Bloque de gestión de puntuaciones: Este bloque actualiza la puntuación del jugador en función de las acciones realizadas durante el juego, como derrotar a los jefes. También muestra la puntuación actual y la puntuación más alta en la pantalla.
+
+8. Bloque de dibujo en pantalla: Este bloque se encarga de dibujar los sprites, las barras de salud y otras imágenes en la pantalla del juego.
+
+9. Bloque de finalización del juego: Este bloque se ejecuta cuando el bucle principal termina y se encarga de detener la música de fondo, cerrar la ventana y salir del programa.
+
+En resumen, estos bloques de código trabajan juntos para crear un juego en Pygame, gestionando la interacción entre los personajes, detectando colisiones, actualizando la pantalla y manejando la lógica del juego.
+
+## Tecnologías utilizadas
+
+- Python
+- Pygame
+- SqLite
+
+
