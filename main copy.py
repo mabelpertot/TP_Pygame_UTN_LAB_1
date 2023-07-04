@@ -1,13 +1,13 @@
 import sys
 import os
+import database
 
 import pygame
 import random
-import database
 
 from controls import move_player
 from classes.constants import WIDTH, HEIGHT, FPS, SHOOT_DELAY
-from functions import show_game_over, music_background
+from functions import show_game_over, music_background, show_game_win
 from menu import show_menu, animate_screen
 
 from classes.player import Player
@@ -17,7 +17,7 @@ from classes.meteors import Meteors, Meteors2, BlackHole
 from classes.explosions import Explosion, Explosion2
 from classes.enemies import Enemy1, Enemy2
 from classes.bosses import Boss1, Boss2, Boss3
-from database import create_scores_table,save_score,get_highest_score
+from database import create_scores_table,save_score,get_highest_score,check_if_table_exists
 
 pygame.init()
 music_background()
@@ -178,9 +178,22 @@ black_hole_imgs = [
 
 initial_player_pos = (WIDTH // 2, HEIGHT - 100)
 
+#crear db
+create_scores_table()
+
+#############################################################################################################
+################################SCORE########################################################################
+#############################################################################################################
+
 score = 0
-hi_score = get_highest_score()
-name = ""
+hi_score = 0
+
+if check_if_table_exists():
+    hi_score = get_highest_score()
+
+hi_score_name = database.get_highscore_name()
+name = hi_score_name
+
 player = Player()
 player_life = 300
 bullet_counter = 300
@@ -194,9 +207,6 @@ if show_menu:
 
 is_shooting = False
 last_shot_time = 0
-
-#crear db
-create_scores_table()
 
 while running:
 
@@ -398,10 +408,14 @@ while running:
             black_hole_img,
         )
         black_hole_group.add(black_hole_object)
-
+#############################################################################################################
+################################PERSONAJE MUERE##############################################################
+#############################################################################################################
     if player_life <= 0:
+        if score >= hi_score:
+            get_name()
+            save_score(name, score)
         show_game_over(score)
-        save_score(score)
         boss1_spawned = False
         boss1_health = 150
         boss2_spawned = False
@@ -789,6 +803,13 @@ while running:
             explosion = Explosion2(boss3_object.rect.center, explosion2_images)
             explosions2.add(explosion)
             boss3_object.kill()
+            get_name()
+            show_game_win()
+            save_score(name, score)
+
+            pygame.mixer.music.stop()
+            pygame.quit()
+            sys.exit()
 
     if boss3_group:
         boss3_object = boss3_group.sprites()[0]
@@ -852,7 +873,11 @@ while running:
     bullet_y_pos = player_life_surface.get_height() + 20
     screen.blit(bullet_counter_surface, (bullet_x_pos, bullet_y_pos))
 
-    score_surface = pygame.font.SysFont('Comic Sans MS', 20).render(f'SCORE: {score}', True, (255, 255, 255))
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    font_path = os.path.join(script_dir, 'fonts', 'PublicPixel.ttf')
+    font_name = font_path
+
+    score_surface = pygame.font.SysFont(font_name, 30).render(f'SCORE: {score}', True, (255, 255, 255))
     score_surface.set_alpha(128)
     score_x_pos = (screen.get_width() - score_surface.get_width()) // 2
     score_image_rect = score_surface.get_rect()
@@ -860,11 +885,17 @@ while running:
     screen.blit(extra_score_img, (score_image_rect.right + 5, score_image_rect.centery - extra_score_img.get_height()//2))
     screen.blit(score_surface, score_image_rect)
 
-    hi_score_surface = pygame.font.SysFont('Comic Sans MS', 20).render(f'HI-SCORE: {hi_score}', True, (255, 255, 255))
+    hi_score_surface = pygame.font.SysFont(font_name, 30).render(f'HIGH SCORE: {hi_score}', True, (255, 255, 255))
     hi_score_surface.set_alpha(128)
     hi_score_x_pos = (screen.get_width() - hi_score_surface.get_width()) // 2
-    hi_score_y_pos = 0
+    hi_score_y_pos = 2
     screen.blit(hi_score_surface, (hi_score_x_pos, hi_score_y_pos))
+
+    name_surface = pygame.font.SysFont(font_name, 30).render(f'NOMBRE: {name}', True, (255, 255, 255))
+    name_surface.set_alpha(128)
+    name_x_pos = (screen.get_width() - name_surface.get_width()) // 2
+    name_y_pos = 24
+    screen.blit(name_surface, (name_x_pos, name_y_pos))
 
     pygame.display.flip()
 

@@ -1,63 +1,56 @@
-import pygame,os
+import pygame
 from classes.constants import WIDTH, HEIGHT
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 """"
-music_background->Carga un archivo de música de fondo utilizando el módulo pygame.mixer.music. 
-Ajusta el volumen de la música a 0.25 y la reproduce en bucle (loops=-1).
+ La función music_background() carga y reproduce la música de fondo del juego en un bucle infinito 
+ con un volumen establecido.
 """
 
-def music_background():
-    pygame.mixer.music.load('game_sounds/background_music.mp3')
-    pygame.mixer.music.set_volume(0.25)
-    pygame.mixer.music.play(loops=-1)
+def music_background(): 
+    pygame.mixer.music.load('game_sounds/background_music.mp3') #Carga un archivo de música de fondo llamado 
+    pygame.mixer.music.set_volume(0.25) #Establece el volumen de la música de fondo al 25% de su volumen máximo
+    pygame.mixer.music.play(loops=-1) #Reproduce la música de fondo en un bucle infinito
 
 """
-show_game_over -> toma un parámetro score que representa la puntuación final del jugador. 
-Dentro de la función, se configuran las fuentes de texto utilizando pygame.font.SysFont 
-Se crea un mensaje de "GAME OVER" utilizando la fuente de 50 píxeles y se renderiza en 
-una superficie de texto. Se obtiene el rectángulo que enmarca el texto y se centra en la 
-pantalla utilizando text.get_rect(center=(WIDTH/2, HEIGHT/2 - 50)).
- Se blit (dibuja) el texto en la superficie de la pantalla (screen.blit(text, text_rect)) 
- y se actualiza la pantalla con pygame.display.flip() para mostrar los mensajes de "GAME OVER" 
- y la puntuación final.
+La función show_game_over(score) muestra la pantalla de "Game Over" en la ventana de pygame. Toma el puntaje como 
+argumento. Muestra el texto "GAME OVER" en el centro de la pantalla y el texto "Final Score: {score}" debajo de él, 
+donde {score} es el puntaje pasado. Luego, reproduce una música de "game over" y hace una pausa de 4 segundos.
 """
 
 def show_game_over(score):
-    font = pygame.font.SysFont('Impact', 50)
-    font_small = pygame.font.SysFont('Impact', 30)
-    text = font.render("GAME OVER", True, (139, 0, 0))
-    text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2 - 50))
-    score_text = font_small.render(f"Final Score: {score}", True, (255, 255, 255))
-    score_rect = score_text.get_rect(center=(WIDTH/2, HEIGHT/2 + 50))
-    screen.blit(text, text_rect)
-    screen.blit(score_text, score_rect)
+    font = pygame.font.SysFont('Impact', 50) # Crea una fuente de texto con la fuente 'Impact' y un tamaño de 50.
+    font_small = pygame.font.SysFont('Impact', 30) # Crea una fuente de texto más pequeña con la fuente 'Impact' y un tamaño de 30.
+    text = font.render("GAME OVER", True, (139, 0, 0)) # Renderiza el texto "GAME OVER" con la fuente y el color especificados.
+    text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2 - 150)) # Obtiene el rectángulo del texto y lo posiciona en el centro de la pantalla (en el eje X) y arriba del centro (en el eje Y).
+    score_text = font_small.render(f"Final Score: {score}", True, (255, 255, 255)) # Renderiza el texto "Final Score: {score}" con la fuente y el color especificados, donde {score} es el puntaje pasado como argumento.
+    score_rect = score_text.get_rect(center=(WIDTH/2, HEIGHT/2 + 100)) # Obtiene el rectángulo del texto del puntaje y lo posiciona en el centro de la pantalla (en el eje X) y debajo del centro (en el eje Y).
+    screen.blit(text, text_rect)  # Dibuja el texto "GAME OVER" en la pantalla en la posición especificada por el rectángulo del texto.
+    screen.blit(score_text, score_rect) # Dibuja el texto del puntaje en la pantalla en la posición especificada por el rectángulo del texto del puntaje.
     pygame.display.flip()
-    pygame.mixer.music.load('game_sounds/gameover.mp3')
-    pygame.mixer.music.play()
-    pygame.time.delay(4000)
-    music_background()
+    pygame.mixer.music.load('game_sounds/gameover.mp3') # Actualiza la pantalla.
+    pygame.mixer.music.play() # Reproduce la música de game over.
+    pygame.time.delay(4000) # Hace una pausa de 4000 milisegundos (4 segundos).
+    music_background() # Llama a la función "music_background()" 
 
 """
-show_game_win -> configura la fuente de texto utilizando pygame.font.SysFont.
-Se crea un mensaje de "AWESOME! GO ON!" utilizando la fuente de 50 píxeles y se renderiza en 
-una superficie de texto. Se obtiene el rectángulo que enmarca el texto y se centra en la 
-pantalla utilizando text.get_rect(center=(WIDTH/2, HEIGHT/2)).
-Luego, se blit (dibuja) el texto en la superficie de la pantalla (screen.blit(text, text_rect)) y se 
-actualiza la pantalla con pygame.display.flip() para mostrar el mensaje de "Game Win".
+La función show_game_win() muestra un mensaje de victoria en la ventana de Pygame. Renderiza el texto "YOU'VE WON!" 
+utilizando la fuente 'Impact' y lo muestra centrado en la pantalla. Luego, carga y reproduce un archivo de música de
+victoria. Después de una pausa de 1 segundo, llama a la función music_background(). 
+El bloque de código muestra un mensaje de victoria y reproduce música relacionada con la victoria en el juego.
 """
 
 def show_game_win():
-    font = pygame.font.SysFont('Impact', 50)
-    text = font.render("AWESOME! GO ON!", True, (255, 255, 255))
-    text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
-    screen.blit(text, text_rect)
-    pygame.display.flip()
-    pygame.mixer.music.load('game_sounds/win.mp3')
-    pygame.mixer.music.play()
-    pygame.time.delay(1000)
-    music_background()
+    font = pygame.font.SysFont('Impact', 50) # Crea una fuente de texto con la fuente 'Impact' y un tamaño de 50.
+    text = font.render("YOU'VE WON!", True, (255, 255, 255)) # Renderiza el texto "YOU'VE WON!" con la fuente y el color especificados.
+    text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2 - 150)) # Obtiene el rectángulo del texto y lo posiciona en el centro de la pantalla.
+    screen.blit(text, text_rect) # Dibuja el texto en la pantalla en la posición especificada por el rectángulo del texto.
+    pygame.display.flip() # Actualiza la pantalla.
+    pygame.mixer.music.load('game_sounds/win.mp3') # Carga un archivo de música de victoria.
+    pygame.mixer.music.play() # Reproduce la música de victoria.
+    pygame.time.delay(1000)  # Hace una pausa de 1000 milisegundos (1 segundo).
+    music_background() # Llama a la función "music_background()"
 
 """" 
 Estas funciones se encargan de mostrar mensajes de "Game Over" y "Game Win" en la pantalla del juego, 

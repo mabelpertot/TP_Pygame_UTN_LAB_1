@@ -1,33 +1,41 @@
 import sqlite3,os
 
+"""
+La función create_scores_table() crea una tabla en una base de datos SQLite para almacenar puntuaciones de juego.
+"""
+'''
 def create_scores_table():
-    """
-    Se encarga de crear una tabla llamada "scores" en la base de datos. 
-    Verifica si la tabla ya existe, y si no es así, la crea con dos columnas: 
-    "name" (texto) y "score" (entero). 
-    Utiliza la biblioteca sqlite3 para conectarse a la base de datos y 
-    ejecutar la consulta necesaria.
-    """
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(script_dir, "scores.db")
 
-    # Crear una conexión a la base de datos
-    conn = sqlite3.connect(db_path)
-    """
-    c = conn.cursor() Crea un objeto cursor que permite interactuar con la base de datos a 
+    script_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la ruta del directorio donde se encuentra el archivo actual.
+    db_path = os.path.join(script_dir, "scores.db") # Crea la ruta completa al archivo de base de datos "scores.db" dentro del directorio actual.
+    conn = sqlite3.connect(db_path) # Establece una conexión a la base de datos especificada por la ruta.
+    c = conn.cursor() # Crea un cursor para ejecutar consultas en la base de datos.
+    c.execute("CREATE TABLE IF NOT EXISTS scores (score INTEGER)")
+    # Ejecuta una consulta SQL para crear una tabla llamada "scores" con una columna llamada "score" de tipo INTEGER, si no existe previamente.
+    conn.commit() # Confirma los cambios realizados en la base de datos.
+    conn.close() # Cierra la conexión a la base de datos.
+'''
+'''
+c = conn.cursor() Crea un objeto cursor que permite interactuar con la base de datos a 
     través de la conexión establecida (conn). Un cursor es una especie de "apuntador" o "marcador" 
     que se utiliza para ejecutar consultas SQL y acceder a los resultados obtenidos.
-    """
-    c = conn.cursor()
+'''
+    
+def create_scores_table():
 
-    # Crear la tabla si no existe
-    c.execute("CREATE TABLE IF NOT EXISTS scores (score INTEGER)")
+    script_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la ruta del directorio donde se encuentra el archivo actual.
+    db_path = os.path.join(script_dir, "scores.db") # Crea la ruta completa al archivo de base de datos "scores.db" dentro del directorio actual.
+    
+    conn = sqlite3.connect(db_path) # Establece una conexión a la base de datos especificada por la ruta.
+    
+    c = conn.cursor() # Crea un cursor para ejecutar consultas en la base de datos.
+    
+    c.execute("CREATE TABLE IF NOT EXISTS scores (name TEXT, score INTEGER)")
+    # Ejecuta una consulta SQL para crear una tabla llamada "scores" con una columna llamada "score" de tipo INTEGER, si no existe previamente.
+    conn.commit() # Confirma los cambios realizados en la base de datos.
+    conn.close() # Cierra la conexión a la base de datos.
 
-    # Guardar los cambios y cerrar la conexión
-    conn.commit()
-    conn.close()
-
-def save_score(score):
+def save_score(name, score):
     """
     Guarda un puntaje en la base de datos. Recibe como parámetros el nombre y el puntaje a guardar. 
     Primero, se conecta a la base de datos y obtiene el puntaje más alto existente. 
@@ -49,7 +57,7 @@ def save_score(score):
         c.execute("DELETE FROM scores")
         
         # Insertar el nuevo puntaje más grande
-        c.execute("INSERT INTO scores (score) VALUES (?)", (int(score),))
+        c.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (name, int(score)))
 
     conn.commit()
     conn.close()

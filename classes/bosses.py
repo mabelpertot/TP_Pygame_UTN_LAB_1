@@ -4,13 +4,11 @@ import math
 
 from .constants import WIDTH, HEIGHT
 
-"""
-En el método __init__(), inicializan los atributos del jefe, como su imagen, posición, velocidad, 
-dirección, temporizador de disparo y cantidad de disparos realizados.
-"""
+
 
 class Boss1(pygame.sprite.Sprite): #Representa al jefe en el juego.
-
+    """ En el método __init__(), inicializan los atributos del jefe, como su imagen, posición, velocidad, 
+    dirección, temporizador de disparo y cantidad de disparos realizados."""
     def __init__(self, x, y, image):
         super().__init__()
         self.image = image
