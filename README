@@ -4,7 +4,7 @@ Este juego 2D de disparos implementa la función para que el jugador controle el
 proyectiles para enfrentarse a enemigos. El objetivo del juego es derrotar a los jefes enemigos y obtener 
 la puntuación más alta posible.
 El jugador tiene una barra de vida que se reduce cuando entra en contacto con los proyectiles enemigos o los 
-jefes de los enemigos.
+jefes enemigos.
 Además, el jugador tiene un contador de municiones que indica la cantidad de proyectiles restantes. Existe
 una mecánica de recolección de "double refill" que se activa al derrotar a algunos jefes.
 El juego también muestra la puntuación actual y la puntuación más alta en la pantalla, esto determina un

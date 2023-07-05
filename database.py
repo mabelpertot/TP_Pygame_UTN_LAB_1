@@ -1,27 +1,9 @@
 import sqlite3,os
 
-"""
-La función create_scores_table() crea una tabla en una base de datos SQLite para almacenar puntuaciones de juego.
-"""
-'''
 def create_scores_table():
-
-    script_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la ruta del directorio donde se encuentra el archivo actual.
-    db_path = os.path.join(script_dir, "scores.db") # Crea la ruta completa al archivo de base de datos "scores.db" dentro del directorio actual.
-    conn = sqlite3.connect(db_path) # Establece una conexión a la base de datos especificada por la ruta.
-    c = conn.cursor() # Crea un cursor para ejecutar consultas en la base de datos.
-    c.execute("CREATE TABLE IF NOT EXISTS scores (score INTEGER)")
-    # Ejecuta una consulta SQL para crear una tabla llamada "scores" con una columna llamada "score" de tipo INTEGER, si no existe previamente.
-    conn.commit() # Confirma los cambios realizados en la base de datos.
-    conn.close() # Cierra la conexión a la base de datos.
-'''
-'''
-c = conn.cursor() Crea un objeto cursor que permite interactuar con la base de datos a 
-    través de la conexión establecida (conn). Un cursor es una especie de "apuntador" o "marcador" 
-    que se utiliza para ejecutar consultas SQL y acceder a los resultados obtenidos.
-'''
-    
-def create_scores_table():
+    """
+    Su único propósito es crear la tabla "scores" en la base de datos "scores.db" si no existe previamente.
+    """
 
     script_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la ruta del directorio donde se encuentra el archivo actual.
     db_path = os.path.join(script_dir, "scores.db") # Crea la ruta completa al archivo de base de datos "scores.db" dentro del directorio actual.

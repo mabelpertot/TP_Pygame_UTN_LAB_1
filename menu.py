@@ -8,6 +8,13 @@ from classes.constants import WIDTH, HEIGHT, BLACK, WHITE, RED # Importa constan
 
 
 def animate_screen(): # Define una función para animar la pantalla de menú.
+    """ 
+    Implementa un menú interactivo que permite al usuario seleccionar "Play" para iniciar el juego principal o 
+    "Exit" para salir del juego. Utiliza tanto el teclado como el mouse para controlar la selección de los botones
+    y anima la pantalla durante la transición al juego principal.
+    """
+
+
     for i in range(0, 20):
         screen.blit(mainmenu_img, (0, 0)) # Dibuja la imagen del menú principal en la pantalla.
         pygame.display.flip() # Actualiza la pantalla.
@@ -23,6 +30,7 @@ pygame.mixer.music.load('game_sounds/menu.mp3') # Carga un archivo de música de
 pygame.mixer.music.set_volume(0.25) # Establece el volumen de la música de fondo.
 pygame.mixer.music.play(-1) # Reproduce la música de fondo en bucle infinito.
 pygame.mixer.set_num_channels(20) # Establece el número máximo de canales de sonido simultáneos.
+
 for i in range(20): # Crea y configura 20 canales de sonido con un volumen predeterminado.
     channel = pygame.mixer.Channel(i)
     channel.set_volume(0.25)
@@ -109,7 +117,3 @@ while show_menu: # Bucle principal del menú.
 
 pygame.quit() # Cierra pygame.
 
-"""
-Este bloque implementa un menú principal interactivo, donde los usuarios pueden seleccionar "Play" para iniciar el 
-juego principal o "Exit" para salir del juego. Se utiliza el teclado para controlar la selección de los botones.
-"""
