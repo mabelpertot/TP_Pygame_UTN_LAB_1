@@ -11,9 +11,9 @@ def music_background():
     pygame.mixer.music.set_volume(0.25) #Establece el volumen de la música de fondo al 25% de su volumen máximo
     pygame.mixer.music.play(loops=-1) #Reproduce la música de fondo en un bucle infinito
 
-def show_game_over(score):
+def show_game_over(score): #Recibe como parametro: score (el puntaje). 
     """
-    Muestra la pantalla de "Game Over" en la ventana de pygame. Toma el puntaje como argumento. 
+    Muestra la pantalla de "Game Over" en la ventana de pygame.
     Muestra el texto "GAME OVER" en el centro de la pantalla y el texto "Final Score: {score}" debajo de él, 
     donde {score} es el puntaje pasado. Luego, reproduce una música de "game over" y hace una pausa de 4 segundos.
     """

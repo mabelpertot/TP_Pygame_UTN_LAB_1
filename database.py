@@ -2,7 +2,8 @@ import sqlite3,os
 
 def create_scores_table():
     """
-    Su único propósito es crear la tabla "scores" en la base de datos "scores.db" si no existe previamente.
+    Esta función se encarga de crear la tabla "scores" en la base de datos si aún no existe, 
+    asegurando que la estructura necesaria esté en su lugar para almacenar los puntajes.
     """
 
     script_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la ruta del directorio donde se encuentra el archivo actual.
@@ -17,9 +18,9 @@ def create_scores_table():
     conn.commit() # Confirma los cambios realizados en la base de datos.
     conn.close() # Cierra la conexión a la base de datos.
 
-def save_score(name, score):
+def save_score(name, score): #Recibe como parámetros el nombre y el puntaje a guardar. 
     """
-    Guarda un puntaje en la base de datos. Recibe como parámetros el nombre y el puntaje a guardar. 
+    Guarda un puntaje en la base de datos. 
     Primero, se conecta a la base de datos y obtiene el puntaje más alto existente. 
     Si el puntaje pasado como parámetro es mayor que el puntaje más alto existente o no hay puntaje 
     existente, se elimina el puntaje existente (si hay alguno) y se inserta el nuevo puntaje en 

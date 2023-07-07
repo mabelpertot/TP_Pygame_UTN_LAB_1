@@ -10,7 +10,6 @@ def move_player(keys, player):
     Este bloque de código controla el movimiento del jugador en las ocho direcciones posibles: 
     izquierda, derecha, arriba, abajo y las diagonales.
     """
-   
 
     if keys[pygame.K_LEFT]: #Verifica si la tecla de flecha izquierda está siendo presionada.
         if keys[pygame.K_UP]: #Verifica si la tecla de flecha arriba está siendo presionada.

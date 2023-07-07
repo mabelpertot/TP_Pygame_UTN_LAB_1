@@ -9,7 +9,6 @@ WHITE = (154, 164, 166) #Establece una constante con un valor de tupla de tres e
 BLACK = (0, 0, 0) #Establece una constante con un valor de tupla de tres enteros (0, 0, 0). Esta tupla representa el color negro en el modelo RGB.
 RED = (255, 0, 0) #establece una constante con un valor de tupla de tres enteros (255, 0, 0). Esta tupla representa el color rojo en el modelo RGB.
 
-
 """
 Constantes que se utilizan en el juego para configurar valores relacionados con el tamaño de la pantalla, 
 la dificultad de los enemigos, los retrasos de disparo, los colores, entre otros. 
