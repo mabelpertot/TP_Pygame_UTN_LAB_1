@@ -3,31 +3,20 @@ import random
 
 from .constants import WIDTH, HEIGHT, ENEMY_FORCE
 
-"""
-En el método __init__(), se inicializan los atributos del enemigo, como su imagen, posición, 
-velocidad y dirección de movimiento.
-"""
-
 class Enemy1(pygame.sprite.Sprite): #Representa un enemigo en el juego. 
 
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, image): #Recibe los parámetros x, y e image, que representan la posición y la imagen del enemigo. 
         super().__init__()
         self.image = image #La imagen del enemigo se establece a partir de un objeto image pasado como argumento.
         self.rect = self.image.get_rect(center=(x, y)) #El rectángulo de colisión se posiciona en el centro de la imagen.
-        self.speed = 4
+        self.speed = 4 #Se inicializa para determinar la velocidad del enemigo en el juego.
         self.direction = random.choice([(-1, -1), (-1, 1), (1, -1), (1, 1)])
     #Almacena una tupla que representa la dirección y sentido del movimiento del enemigo, seleccionada aleatoriamente
-    
-    """
-    En el método update(), se actualiza la posición del enemigo en función de su dirección y velocidad.
-    Se desplaza el rectángulo de colisión en las coordenadas x e y según la dirección y velocidad actuales.
-    Se verifican los límites de la pantalla para evitar que el enemigo se salga de ella. Si el enemigo alcanza un 
-    límite, se selecciona una nueva dirección aleatoria que permita al enemigo continuar dentro de la pantalla.
-    """
-    def update(self, enemy_group):
-        dx, dy = self.direction
-        self.rect.x += dx * self.speed
-        self.rect.y += dy * self.speed
+
+    def update(self, enemy_group): #Se encarga de actualizar la posición del enemigo en cada iteración del juego.
+        dx, dy = self.direction #Se obtienen los valores dx y dy de la dirección de movimiento del enemigo. 
+        self.rect.x += dx * self.speed #Se actualizan las coordenadas x e y del rectángulo del enemigo 
+        self.rect.y += dy * self.speed #según la dirección y la velocidad establecidas.
 
         if self.rect.left < 5:
             self.rect.left = 5
@@ -43,25 +32,18 @@ class Enemy1(pygame.sprite.Sprite): #Representa un enemigo en el juego.
             self.rect.bottom = HEIGHT - 5
             self.direction = random.choice([(1, 0), (-1, 0), (0, -1), (1, -1), (-1, -1)])
 
-        """
-        Se verifica si el enemigo colisiona con otros enemigos en el grupo enemy_group mediante 
-        el uso de la función spritecollide().
-        """
+        #Se verifican las colisiones del enemigo con los límites de la pantalla. 
         collided_with = pygame.sprite.spritecollide(self, enemy_group, False)
         for other_enemy in collided_with:
             if other_enemy != self:
                 distance_vec = pygame.math.Vector2(other_enemy.rect.center) - pygame.math.Vector2(self.rect.center)
                 distance = distance_vec.length()
                 angle = distance_vec.angle_to(pygame.math.Vector2(1, 0))
-                """
-                Se calcula la distancia entre los centros de los rectángulos de colisión de los enemigos 
-                y se obtiene la distancia y el ángulo entre ellos."""
+
                 repel_vec = pygame.math.Vector2(1, 0).rotate(angle)
                 repel_vec *= (1 - (distance / (self.rect.width + other_enemy.rect.width)))
                 repel_vec *= ENEMY_FORCE
-                """
-                Se calcula un vector de repulsión proporcional a la distancia entre los enemigos y se 
-                escala por una constante de fuerza (ENEMY_FORCE)."""
+
                 self_dir = pygame.math.Vector2(self.direction)
                 other_dir = pygame.math.Vector2(other_enemy.direction)
 
@@ -74,16 +56,7 @@ class Enemy1(pygame.sprite.Sprite): #Representa un enemigo en el juego.
 
                 self.rect.move_ip(-repel_vec.x, -repel_vec.y)
                 other_enemy.rect.move_ip(repel_vec.x, repel_vec.y)
-    """
-    este código implementa el comportamiento de un enemigo en el juego. El enemigo se mueve en una dirección 
-    aleatoria y se repelerá de otros enemigos en caso de colisión, ajustando sus direcciones de movimiento y 
-    separándolos.
-    """
 
-"""
-En el método __init__(), se inicializan los atributos del enemigo, como su imagen, posición, velocidad, 
-dirección de movimiento, temporizador de disparo y contador de disparos.
-"""
 
 class Enemy2(pygame.sprite.Sprite): #Representa un tipo de enemigo.
 
