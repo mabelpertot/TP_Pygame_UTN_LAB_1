@@ -6,17 +6,17 @@ def create_scores_table():
     asegurando que la estructura necesaria esté en su lugar para almacenar los puntajes.
     """
 
-    script_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la ruta del directorio donde se encuentra el archivo actual.
-    db_path = os.path.join(script_dir, "scores.db") # Crea la ruta completa al archivo de base de datos "scores.db" dentro del directorio actual.
+    script_dir = os.path.dirname(os.path.abspath(__file__)) 
+    db_path = os.path.join(script_dir, "scores.db") 
     
-    conn = sqlite3.connect(db_path) # Establece una conexión a la base de datos especificada por la ruta.
+    conn = sqlite3.connect(db_path) 
     
-    c = conn.cursor() # Crea un cursor para ejecutar consultas en la base de datos.
+    c = conn.cursor() 
     
     c.execute("CREATE TABLE IF NOT EXISTS scores (name TEXT, score INTEGER)")
-    # Ejecuta una consulta SQL para crear una tabla llamada "scores" con una columna llamada "score" de tipo INTEGER, si no existe previamente.
-    conn.commit() # Confirma los cambios realizados en la base de datos.
-    conn.close() # Cierra la conexión a la base de datos.
+   
+    conn.commit() 
+    conn.close() 
 
 def save_score(name, score): #Recibe como parámetros el nombre y el puntaje a guardar. 
     """
