@@ -1,9 +1,16 @@
 import sqlite3,os
+import pygame
+from classes.constants import WIDTH, BLACK, WHITE
+from functions import *
+
 
 def create_scores_table():
     """
-    Esta función se encarga de crear la tabla "scores" en la base de datos si aún no existe, 
-    asegurando que la estructura necesaria esté en su lugar para almacenar los puntajes.
+    Se encarga de crear una tabla llamada "scores" en la base de datos. 
+    Verifica si la tabla ya existe, y si no es así, la crea con dos columnas: 
+    "name" (texto) y "score" (entero). 
+    Utiliza la biblioteca sqlite3 para conectarse a la base de datos y 
+    ejecutar la consulta necesaria.
     """
 
     script_dir = os.path.dirname(os.path.abspath(__file__)) 
@@ -14,13 +21,13 @@ def create_scores_table():
     c = conn.cursor() 
     
     c.execute("CREATE TABLE IF NOT EXISTS scores (name TEXT, score INTEGER)")
-   
-    conn.commit() 
-    conn.close() 
+    # Ejecuta una consulta SQL para crear una tabla llamada "scores" con una columna llamada "score" de tipo INTEGER, si no existe previamente.
+    conn.commit() # Confirma los cambios realizados en la base de datos.
+    conn.close() # Cierra la conexión a la base de datos.
 
-def save_score(name, score): #Recibe como parámetros el nombre y el puntaje a guardar. 
+def save_score(name, score):
     """
-    Guarda un puntaje en la base de datos. 
+    Guarda un puntaje en la base de datos. Recibe como parámetros el nombre y el puntaje a guardar. 
     Primero, se conecta a la base de datos y obtiene el puntaje más alto existente. 
     Si el puntaje pasado como parámetro es mayor que el puntaje más alto existente o no hay puntaje 
     existente, se elimina el puntaje existente (si hay alguno) y se inserta el nuevo puntaje en 
@@ -29,21 +36,45 @@ def save_score(name, score): #Recibe como parámetros el nombre y el puntaje a g
     script_dir = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(script_dir, "scores.db")
 
-    # Conectar a la base de datos y obtener el puntaje actual
+    # Conectar a la base de datos y obtener los 10 mejores puntajes actuales
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
-    c.execute("SELECT score FROM scores ORDER BY score DESC LIMIT 1")
-    result = c.fetchone()
+    c.execute("SELECT score FROM scores ORDER BY score DESC LIMIT 10")
+    current_scores = c.fetchall()
 
-    if result is None or score > result[0]:
-        # Eliminar el puntaje existente si hay alguno
-        c.execute("DELETE FROM scores")
-        
-        # Insertar el nuevo puntaje más grande
+    if len(current_scores) < 10 or score > current_scores[-1][0]:
+        # Eliminar el puntaje más bajo si la tabla está llena
+        if len(current_scores) >= 10:
+            lowest_score = current_scores[-1][0]
+            c.execute("DELETE FROM scores WHERE score=?", (lowest_score,))
+
+        # Insertar el nuevo puntaje en la tabla
         c.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (name, int(score)))
 
     conn.commit()
     conn.close()
+
+def show_scores():
+    scores_list = score.read_scores()  # Lee los puntajes desde el archivo
+    screen.fill(BLACK)  # Limpia la pantalla
+    font = pygame.font.SysFont('Calibri', 40)
+    y = 100  # Posición vertical inicial para mostrar los puntajes
+    
+    # Encabezado de la tabla
+    header_text = font.render("Top 10 Scores", True, WHITE)
+    header_rect = header_text.get_rect(center=(WIDTH // 2, y))
+    screen.blit(header_text, header_rect)
+    y += 50
+    
+    # Mostrar los puntajes en la tabla
+    for i, score in enumerate(scores_list[:10], start=1):
+        score_text = font.render(f"{i}. {score}", True, WHITE)
+        score_rect = score_text.get_rect(center=(WIDTH // 2, y))
+        screen.blit(score_text, score_rect)
+        y += 40
+    
+    pygame.display.flip()  # Actualiza la pantalla
+
 
 def check_if_table_exists():
     """

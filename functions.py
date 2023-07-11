@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys, os
 from classes.constants import WIDTH, HEIGHT
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -29,8 +29,38 @@ def show_game_over(score): #Recibe como parametro: score (el puntaje).
     pygame.display.flip()
     pygame.mixer.music.load('game_sounds/gameover.mp3') 
     pygame.mixer.music.play() 
-    pygame.time.delay(4000) 
+    pygame.time.delay(5000) 
     music_background() 
+    
+    show_continue_text = True # Variable para controlar la visualización del texto"Presione una tecla para continuar"
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running = False
+
+        screen.fill((0, 0, 0)) # Limpia la pantalla
+
+        text_surface = font.render("Game Over", True, (139, 0, 0))
+        text_rect = text_surface.get_rect(center=(WIDTH/2, HEIGHT/2))
+        text_rect.center = (WIDTH/2, HEIGHT/2)
+        screen.blit(text_surface, text_rect)
+
+        if show_continue_text:
+            continue_font_size = 18
+            continue_font = pygame.font.SysFont('Impact', continue_font_size)
+            continue_text_surface = continue_font.render("Presionar Esc para Continuar", True, (255, 255, 255))
+            continue_text_rect = continue_text_surface.get_rect()
+            continue_text_rect.center = (WIDTH/2, HEIGHT/2 + 100)
+            screen.blit(continue_text_surface, continue_text_rect)
+            show_continue_text = not show_continue_text
+
+            pygame.display.flip()
+            pygame.time.delay(5000)
 
 def show_game_win():
     """

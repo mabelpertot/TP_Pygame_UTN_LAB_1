@@ -1,11 +1,12 @@
 import sys 
 import random 
 
+
 import pygame 
 import pygame.mixer 
 
 from classes.constants import WIDTH, HEIGHT, BLACK, WHITE, RED 
-
+from database import create_scores_table,save_score, check_if_table_exists,get_highest_score, get_highscore_name, show_scores
 
 def animate_screen(): # Define una función para animar la pantalla de menú.
     """ 
@@ -13,7 +14,6 @@ def animate_screen(): # Define una función para animar la pantalla de menú.
     "Exit" para salir del juego. Utiliza tanto el teclado como el mouse para controlar la selección de los botones
     y anima la pantalla durante la transición al juego principal.
     """
-
 
     for i in range(0, 20):
         screen.blit(mainmenu_img, (0, 0)) # Dibuja la imagen del menú principal en la pantalla.
@@ -23,7 +23,6 @@ def animate_screen(): # Define una función para animar la pantalla de menú.
         pygame.display.flip()
         pygame.time.wait(10)
 
-
 pygame.mixer.init() 
 pygame.init() 
 pygame.mixer.music.load('game_sounds/menu.mp3') 
@@ -31,7 +30,8 @@ pygame.mixer.music.set_volume(0.25)
 pygame.mixer.music.play(-1)
 pygame.mixer.set_num_channels(20) 
 
-for i in range(20): # Crea y configura 20 canales de sonido con un volumen predeterminado.
+#Repite los pasos 3 a 5 un total de 20 veces para crear una animación en la pantalla del menú.
+for i in range(20): 
     channel = pygame.mixer.Channel(i)
     channel.set_volume(0.25)
 
@@ -48,6 +48,7 @@ logo_y = -400
 
 play_button_rect = pygame.Rect(WIDTH // 2 - 10, HEIGHT // 2 - 25, 205, 50) 
 quit_button_rect = pygame.Rect(WIDTH // 2 - 10, HEIGHT // 2 + 50, 205, 50) 
+score_button_rect = pygame.Rect(WIDTH // 2 - 10, HEIGHT // 2 + 130, 205, 50)
 
 pygame.mixer.music.load('game_sounds/menu.mp3') 
 pygame.mixer.music.play(-1) 
@@ -67,13 +68,25 @@ while show_menu:
             if play_button_rect.collidepoint(x, y): 
                 explosion_sound.play() 
                 animate_screen() 
-                show_menu = False 
-                import main 
-                main.main() 
+                show_menu = False
                 break
-            elif quit_button_rect.collidepoint(x, y): 
+
+            elif score_button_rect.collidepoint(x, y):
+                explosion_sound.play()
+                animate_screen()
+                show_menu = False
+                break
+
+            elif quit_button_rect.collidepoint(x, y):
                 pygame.quit()
                 sys.exit()
+            else:
+                selected_button = None
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+
 
         if event.type == pygame.KEYDOWN: 
             if event.key == pygame.K_UP:
@@ -98,6 +111,7 @@ while show_menu:
     screen.blit(logo_img, (logo_x, logo_y)) # Dibuja el logotipo del juego en la pantalla.
 
     font = pygame.font.SysFont('Calibri', 40) 
+    #Botón "Play"
     text = font.render("Play", True, WHITE) 
     pygame.draw.rect(screen, BLACK, play_button_rect, border_radius=10) 
     if selected_button == 0: 
@@ -105,6 +119,7 @@ while show_menu:
     text_rect = text.get_rect()
     text_rect.center = play_button_rect.center
     screen.blit(text, text_rect) 
+    #Botón "Exit"
     text = font.render("Exit", True, WHITE) 
     pygame.draw.rect(screen, BLACK, quit_button_rect, border_radius=10) 
     if selected_button == 1: 
@@ -112,6 +127,17 @@ while show_menu:
     text_rect = text.get_rect()
     text_rect.center = quit_button_rect.center
     screen.blit(text, text_rect) 
+    #Botón "Score"
+    text = font.render("Score", True, WHITE) 
+    pygame.draw.rect(screen, BLACK, score_button_rect, border_radius=10) 
+    if selected_button == 2: 
+        pygame.draw.rect(screen, RED, score_button_rect, border_radius=10, width=4) 
+    text_rect = text.get_rect()
+    text_rect.center = score_button_rect.center
+    screen.blit(text, text_rect) 
+
+
+
     pygame.display.flip() 
     clock.tick(60) 
 

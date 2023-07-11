@@ -130,10 +130,6 @@ class Enemy2(pygame.sprite.Sprite): #Representa un tipo de enemigo.
             self.rect.x += direction.x * self.speed
             self.rect.y += direction.y * self.speed
 
-"""
-En el método __init__(), se inicializan los atributos de la bala, como su imagen, posición, velocidad y 
-sonido de disparo.
-"""
 
 class Enemy2Bullet(pygame.sprite.Sprite): #Representa una bala disparada por el enemigo.
 

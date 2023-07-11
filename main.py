@@ -1,9 +1,6 @@
-import sys
-import os
-import database
 
-import pygame
-import random
+import pygame, random, os, database, sys
+
 
 from controls import move_player
 from classes.constants import WIDTH, HEIGHT, FPS, SHOOT_DELAY
@@ -177,27 +174,27 @@ black_hole_imgs = [
 ]
 
 initial_player_pos = (WIDTH // 2, HEIGHT - 100)
-
 #crear db
 create_scores_table()
 
-#############################################################################################################
-################################SCORE########################################################################
-#############################################################################################################
-
+################################SCORE#######################################
 score = 0
 hi_score = 0
-
+#Comprobación si existe una tabla en la base de datos.
+#Obtención del puntaje más alto si la tabla existe.
 if check_if_table_exists():
     hi_score = get_highest_score()
 
+#Obtención del nombre del puntaje más alto desde la base de datos.
 hi_score_name = database.get_highscore_name()
 name = hi_score_name
 
+#Inicialización de variables relacionadas con el jugador, como vidas y contador de balas.
 player = Player()
 player_life = 300
 bullet_counter = 300
 
+#Variables booleanas para el estado del juego, como pausa y ejecución.
 paused = False
 running = True
 
@@ -208,12 +205,29 @@ if show_menu:
 is_shooting = False
 last_shot_time = 0
 
-while running:
+##################################################BUCLE PRINCIPAL##########################################################
+# Manejo de eventos de pygame, como presionar o soltar teclas.
+#Control de movimiento del jugador.
+#Control de disparo del jugador.
+#Actualización de la posición de los elementos en el juego, como el fondo, los enemigos, los proyectiles y las explosiones.
+#Colisiones entre los objetos del juego y el jugador o los proyectiles.
+#Actualización de la puntuación y otros elementos del juego.
+#Dibujo de los elementos en la pantalla.
+###########################################################################################################################
 
+while running:
+    """
+    El juego se ejecuta en un ciclo while.
+    Se manejan los eventos del juego, se actualizan los sprites, 
+    se verifica si el jugador pierde, se dibujan los elementos en la pantalla 
+    """
+
+
+    # Eventos del juego
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        #Si se presiona la tecla de espacio y el juego no está pausado, se crea un objeto de bala y se agrega al grupo de balas.
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and not paused:
                 if bullet_counter > 0 and pygame.time.get_ticks() - last_shot_time > SHOOT_DELAY:
@@ -223,6 +237,9 @@ while running:
                     bullet_counter -= 1
                 is_shooting = True
 
+            #Si se presiona la tecla de escape, se sale del juego.
+            #Si se presiona la tecla "P" o "PAUSE", se pausa o reanuda el juego.
+            #Si el juego no está pausado, se mueve al jugador en la dirección correspondiente según las teclas presionadas.
             elif event.key == pygame.K_ESCAPE:
                 sys.exit(0)
             elif event.key == pygame.K_p or event.key == pygame.K_PAUSE:
@@ -237,6 +254,7 @@ while running:
                 elif event.key == pygame.K_DOWN:
                     player.move_down()
 
+        #Se actualiza el estado de disparo del jugador.
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE and player.original_image is not None:
                 player.image = player.original_image.copy()
@@ -251,26 +269,14 @@ while running:
                 elif event.key == pygame.K_DOWN:
                     player.stop_down()
 
-        elif event.type == pygame.JOYBUTTONDOWN:
-            if event.button == 0 and not paused:
-                is_shooting = True
-                if bullet_counter > 0:
-                    bullet = Bullet(player.rect.centerx, player.rect.top)
-                    bullets.add(bullet)
-                    bullet_counter -= 1
-            elif event.button == 7:
-                paused = not paused
-        elif event.type == pygame.JOYBUTTONUP:
-            if event.button == 0 and player.original_image is not None:
-                is_shooting = False
-
+     #Se comprueba si ha pasado el tiempo suficiente desde el último disparo y se dispara una bala si el jugador está disparando.
     if pygame.time.get_ticks() - last_shot_time > SHOOT_DELAY and is_shooting and not paused:
         if bullet_counter > 0:
             last_shot_time = pygame.time.get_ticks()
             bullet = Bullet(player.rect.centerx, player.rect.top)
             bullets.add(bullet)
             bullet_counter -= 1
-
+    #Si el juego está pausado, se muestra el mensaje "PAUSE" en la pantalla.
     if paused:
         font = pygame.font.SysFont('Comic Sans MS', 40)
         text = font.render("PAUSE", True, (255, 255, 255))
@@ -319,6 +325,7 @@ while running:
     background_top_rect.top = bg_y_shift + HEIGHT
     screen.blit(background_top, background_top_rect)
 
+    #Se generan enemigos y obstáculos aleatorios en función de la puntuación obtenida.
     if score > hi_score: 
         hi_score = score
 
@@ -408,8 +415,11 @@ while running:
             black_hole_img,
         )
         black_hole_group.add(black_hole_object)
-#############################################################################################################
-################################PERSONAJE MUERE##############################################################
+
+#################################################CONTROL FIN DE JUEGO#######################################
+#Verificación de la vida del jugador.
+#Mostrar pantalla de juego terminado.
+#Reiniciar variables y grupos de elementos del juego.
 #############################################################################################################
     if player_life <= 0:
         if score >= hi_score:
@@ -527,6 +537,9 @@ while running:
                 double_refill.kill()
                 double_refill.sound_effect.play()
 
+    #Actualización y dibujo de elementos adicionales:
+        #Actualización y dibujo de elementos como meteoritos, refuerzos de vida y puntuación adicional.
+        #Actualización y dibujo de jefes en el juego.
     for meteor_object in meteor_group:
         meteor_object.update()
         meteor_object.draw(screen)
@@ -554,13 +567,13 @@ while running:
                 double_refill_group.add(double_refill)
 
         if score >= 3000:
-            meteor_object.speed = 4
+            meteor_object.speed = 2
         if score >= 10000:
-            meteor_object.speed = 6
+            meteor_object.speed = 4
         if score >= 15000:
-            meteor_object.speed = 8
+            meteor_object.speed = 6
         if score >= 20000:
-            meteor_object.speed = 10
+            meteor_object.speed = 8
 
     for meteor2_object in meteor2_group:
         meteor2_object.update()
@@ -573,6 +586,7 @@ while running:
             meteor2_object.kill()
             score += 20
 
+        #Se detectan colisiones entre los elementos del juego, como el jugador con los enemigos o las balas con los enemigos.
         bullet_collisions = pygame.sprite.spritecollide(meteor2_object, bullets, True)
         for bullet_collision in bullet_collisions:
             explosion = Explosion(meteor2_object.rect.center, explosion_images)
@@ -589,13 +603,13 @@ while running:
                 double_refill_group.add(double_refill)
 
         if score >= 3000:
-            meteor2_object.speed = 4
+            meteor2_object.speed = 2
         if score >= 10000:
-            meteor2_object.speed = 6
+            meteor2_object.speed = 4
         if score >= 15000:
-            meteor2_object.speed = 8
+            meteor2_object.speed = 6
         if score >= 20000:
-            meteor2_object.speed = 10
+            meteor2_object.speed = 8
 
     for enemy_object in enemy1_group:
         enemy_object.update(enemy1_group)
@@ -852,6 +866,7 @@ while running:
     else:
         player_life_bar.fill((0, 0, 0))
 
+    #Se actualizan y dibujan los elementos del juego, como el jugador, las balas, los enemigos, las explosiones y las barras de vida y munición.
     player_life_surface.blit(life_bar_image, (0, 0))
     player_life_surface.blit(player_life_bar, (35, 0))
 
@@ -877,6 +892,7 @@ while running:
     font_path = os.path.join(script_dir, 'fonts', 'PublicPixel.ttf')
     font_name = font_path
 
+    #Se muestra la puntuación actual, la puntuación más alta y el nombre del jugador en la pantalla.
     score_surface = pygame.font.SysFont(font_name, 30).render(f'SCORE: {score}', True, (255, 255, 255))
     score_surface.set_alpha(128)
     score_x_pos = (screen.get_width() - score_surface.get_width()) // 2

@@ -131,3 +131,4 @@ class ExtraScore(pygame.sprite.Sprite): #Representa un objeto de puntuación ext
 
     def draw(self, surface): 
         surface.blit(self.image, self.rect) 
+
