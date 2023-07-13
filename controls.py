@@ -1,6 +1,5 @@
 import pygame
 
-
 def move_player(keys, player):
     """
     Esta función toma dos parámetros: keys y player. keys es un diccionario que representa el 

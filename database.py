@@ -55,6 +55,11 @@ def save_score(name, score):
     conn.close()
 
 def show_scores():
+    """
+    Su objetivo es mostrar los puntajes almacenados en una base de datos SQLite en 
+    una interfaz gráfica utilizando la biblioteca Pygame.
+    """
+    
     script_dir = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(script_dir, "scores.db")
     conn = sqlite3.connect(db_path)

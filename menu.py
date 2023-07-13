@@ -64,7 +64,6 @@ def music_background():
 if __name__ == "__main__":
     music_background()
 
-
 def animate_screen(): # Define una función para animar la pantalla de menú.
     """ 
     Implementa un menú interactivo que permite al usuario seleccionar "Play" para iniciar el juego principal o 

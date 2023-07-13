@@ -11,8 +11,7 @@ def music_background():
     pygame.mixer.music.load('game_sounds/background_music.mp3')
     volume = 0.25  # Volumen inicial
     pygame.mixer.music.set_volume(volume)
-    pygame.mixer.music.play(loops=-1)
-    
+    pygame.mixer.music.play(loops=-1)    
 
 def show_game_over(screen, score): 
     """
