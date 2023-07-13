@@ -16,6 +16,8 @@ from classes.enemies import Enemy1, Enemy2
 from classes.bosses import Boss1, Boss2, Boss3
 from database import create_scores_table,save_score,get_highest_score,check_if_table_exists
 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
 pygame.init()
 music_background()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -178,8 +180,8 @@ initial_player_pos = (WIDTH // 2, HEIGHT - 100)
 create_scores_table()
 
 ################################SCORE#######################################
-score = 0
-hi_score = 0
+score = 25000
+hi_score = 200000
 #Comprobación si existe una tabla en la base de datos.
 #Obtención del puntaje más alto si la tabla existe.
 if check_if_table_exists():
@@ -191,8 +193,8 @@ name = hi_score_name
 
 #Inicialización de variables relacionadas con el jugador, como vidas y contador de balas.
 player = Player()
-player_life = 300
-bullet_counter = 300
+player_life = 500
+bullet_counter = 500
 
 #Variables booleanas para el estado del juego, como pausa y ejecución.
 paused = False
@@ -205,7 +207,7 @@ if show_menu:
 is_shooting = False
 last_shot_time = 0
 
-##################################################BUCLE PRINCIPAL##########################################################
+##########################BUCLE PRINCIPAL####################################
 # Manejo de eventos de pygame, como presionar o soltar teclas.
 #Control de movimiento del jugador.
 #Control de disparo del jugador.
@@ -213,7 +215,6 @@ last_shot_time = 0
 #Colisiones entre los objetos del juego y el jugador o los proyectiles.
 #Actualización de la puntuación y otros elementos del juego.
 #Dibujo de los elementos en la pantalla.
-###########################################################################################################################
 
 while running:
     """
@@ -416,16 +417,16 @@ while running:
         )
         black_hole_group.add(black_hole_object)
 
-#################################################CONTROL FIN DE JUEGO#######################################
+##########################CONTROL FIN DE JUEGO###########################
 #Verificación de la vida del jugador.
 #Mostrar pantalla de juego terminado.
 #Reiniciar variables y grupos de elementos del juego.
-#############################################################################################################
+
     if player_life <= 0:
         if score >= hi_score:
             get_name()
             save_score(name, score)
-        show_game_over(score)
+        show_game_over(screen, score)
         boss1_spawned = False
         boss1_health = 150
         boss2_spawned = False
@@ -461,7 +462,7 @@ while running:
             black_hole_object.sound_effect.play()
 
         if score >= 5000:
-            meteor_object.speed = 4
+            meteor_object.speed = 2
         if score >= 10000:
             meteor_object.speed = 4
         if score >= 15000:
@@ -818,7 +819,7 @@ while running:
             explosions2.add(explosion)
             boss3_object.kill()
             get_name()
-            show_game_win()
+            show_game_win(screen)
             save_score(name, score)
 
             pygame.mixer.music.stop()

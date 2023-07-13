@@ -82,3 +82,4 @@ class Player: #Representa al jugador en el juego.
 
     def stop_down(self):
         pass
+

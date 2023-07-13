@@ -1,12 +1,69 @@
 import sys 
 import random 
-
-
 import pygame 
+
 import pygame.mixer 
 
 from classes.constants import WIDTH, HEIGHT, BLACK, WHITE, RED 
-from database import create_scores_table,save_score, check_if_table_exists,get_highest_score, get_highscore_name, show_scores
+from database import show_scores
+
+
+# Dimensiones de la barra deslizante
+ANCHO_BARRA = 200
+ALTO_BARRA = 10
+
+# Colores
+COLOR_FONDO = (255, 255, 255)
+COLOR_BARRA = (0, 255, 0)
+
+def music_background():
+    """
+    Carga y reproduce la música de fondo del juego en un bucle infinito con un volumen establecido.
+    Permite al usuario ajustar el volumen presionando las teclas "+" y "-".
+    """
+    pygame.init()
+    pygame.mixer.init()  # Inicializar el mezclador de Pygame
+    pantalla = pygame.display.set_mode((400, 200))
+    pygame.display.set_caption("Ajuste de volumen")
+
+    # Cargar la música del juego
+    pygame.mixer.music.load("game_sounds\menu.mp3")
+    pygame.mixer.music.play(-1)  # Reproducir en bucle
+
+    reloj = pygame.time.Clock()
+    ejecutando = True
+
+    while ejecutando:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                ejecutando = False
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                if barra.collidepoint(evento.pos):
+                    # Obtener la posición X del clic del mouse
+                    pos_x = evento.pos[0] - barra.x
+                    # Calcular el valor del volumen según la posición X
+                    volumen = pos_x / ANCHO_BARRA
+                    # Ajustar el volumen
+                    pygame.mixer.music.set_volume(volumen)
+
+        pantalla.fill(COLOR_FONDO)
+
+        # Dibujar la barra deslizante
+        barra = pygame.Rect(100, 90, ANCHO_BARRA, ALTO_BARRA)
+        pygame.draw.rect(pantalla, COLOR_BARRA, barra)
+
+        # Dibujar un indicador del volumen actual
+        indicador_volumen = pygame.Rect(barra.x + barra.width * pygame.mixer.music.get_volume(), barra.y - 5, 5, 20)
+        pygame.draw.rect(pantalla, (255, 0, 0), indicador_volumen)
+
+        pygame.display.flip()
+        reloj.tick(60)  # Limitar a 60 FPS
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    music_background()
+
 
 def animate_screen(): # Define una función para animar la pantalla de menú.
     """ 
@@ -74,7 +131,8 @@ while show_menu:
             elif score_button_rect.collidepoint(x, y):
                 explosion_sound.play()
                 animate_screen()
-                show_menu = False
+                show_scores()
+                pygame.time.wait(5000)
                 break
 
             elif quit_button_rect.collidepoint(x, y):
@@ -82,13 +140,11 @@ while show_menu:
                 sys.exit()
             else:
                 selected_button = None
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                sys.exit()
-
-
-        if event.type == pygame.KEYDOWN: 
+                show_menu = False
+ 
             if event.key == pygame.K_UP:
                 selected_button = 0 
             elif event.key == pygame.K_DOWN: 
@@ -136,10 +192,10 @@ while show_menu:
     text_rect.center = score_button_rect.center
     screen.blit(text, text_rect) 
 
-
-
     pygame.display.flip() 
     clock.tick(60) 
 
+if not show_menu:
+    screen.fill(BLACK)
 pygame.quit() 
 

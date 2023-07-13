@@ -49,11 +49,11 @@ class Boss1(pygame.sprite.Sprite): #Representa al jefe en el juego.
         else: 
             self.speed = 10 
             dx = player.rect.centerx - self.rect.centerx 
-            dy = player.rect.centery - self.rect.centery 
-            direction = pygame.math.Vector2(dx, dy).normalize() 
-
-            self.rect.x += direction.x * self.speed 
-            self.rect.y += direction.y * self.speed
+            dy = player.rect.centery - self.rect.centery
+            if dx != 0 or dy != 0:  # Validación para evitar la normalización de un vector de longitud cero
+                direction = pygame.math.Vector2(dx, dy).normalize() 
+                self.rect.x += direction.x * self.speed 
+                self.rect.y += direction.y * self.speed
 
 class Boss1Bullet(pygame.sprite.Sprite): #Representa las balas disparadas por el jefe.
     """
@@ -159,9 +159,10 @@ class Boss2(pygame.sprite.Sprite): #Representa al segundo jefe en el juego.
             if self.speed != 5: 
                 self.speed = 5 / math.sqrt(2) 
             dx = player.rect.centerx - self.rect.centerx 
-            dy = player.rect.centery - self.rect.centery 
-            direction = pygame.math.Vector2(dx, dy).normalize() 
+            dy = player.rect.centery - self.rect.centery
 
+        if dx != 0 or dy != 0:  # Validación para evitar la normalización de un vector de longitud cero 
+            direction = pygame.math.Vector2(dx, dy).normalize() 
             self.rect.x += direction.x * self.speed 
             self.rect.y += direction.y * self.speed 
 

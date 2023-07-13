@@ -1,5 +1,4 @@
 import pygame
-from classes.constants import WIDTH, HEIGHT
 
 
 def move_player(keys, player):

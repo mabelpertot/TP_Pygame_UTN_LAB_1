@@ -55,26 +55,35 @@ def save_score(name, score):
     conn.close()
 
 def show_scores():
-    scores_list = score.read_scores()  # Lee los puntajes desde el archivo
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(script_dir, "scores.db")
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Consulta SELECT para obtener los puntajes
+    cursor.execute("SELECT * FROM scores ORDER BY score DESC LIMIT 10")
+    scores_list = cursor.fetchall()
+
+    conn.close()
+
     screen.fill(BLACK)  # Limpia la pantalla
-    font = pygame.font.SysFont('Calibri', 40)
+    font = pygame.font.SysFont('Calibri', 20)
     y = 100  # Posición vertical inicial para mostrar los puntajes
-    
+
     # Encabezado de la tabla
     header_text = font.render("Top 10 Scores", True, WHITE)
     header_rect = header_text.get_rect(center=(WIDTH // 2, y))
     screen.blit(header_text, header_rect)
     y += 50
-    
+
     # Mostrar los puntajes en la tabla
-    for i, score in enumerate(scores_list[:10], start=1):
-        score_text = font.render(f"{i}. {score}", True, WHITE)
+    for i, score in enumerate(scores_list, start=1):
+        score_text = font.render(f"{i}. {score[0]} - {score[1]}", True, WHITE)
         score_rect = score_text.get_rect(center=(WIDTH // 2, y))
         screen.blit(score_text, score_rect)
         y += 40
-    
-    pygame.display.flip()  # Actualiza la pantalla
 
+    pygame.display.flip()  # Actualiza la pantalla    
 
 def check_if_table_exists():
     """
